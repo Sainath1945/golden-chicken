@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Admin - Golden Chicken</title>
+  <style>
+    body { font-family: Arial; text-align:center; }
+    input { margin:5px; padding:5px; }
+  </style>
+</head>
+<body>
+
+<h2>Admin Panel</h2>
+<div id="adminPanel"></div>
+
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyAS4JupEabUBhu2IPOvYJ2MupB4Fl6M0vc",
+  authDomain: "golden-chicken-c1637.firebaseapp.com",
+  databaseURL: "https://golden-chicken-c1637-default-rtdb.firebaseio.com",
+  projectId: "golden-chicken-c1637"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+
+function renderAdmin(data) {
+  const admin = document.getElementById("adminPanel");
+  admin.innerHTML = "";
+
+  Object.entries(data).forEach(([key, product]) => {
+    admin.innerHTML += `
+      <div>
+        ${product.name} ₹
+        <input type="number" value="${product.basePrice}" 
+          onchange="updatePrice('${key}', this.value)">
+      </div>
+    `;
+  });
+}
+
+function updatePrice(key, value) {
+  db.ref("products/" + key).update({ basePrice: Number(value) });
+}
+
+db.ref("products").on("value", snap => {
+  if (snap.val()) renderAdmin(snap.val());
+});
+</script>
+
+</body>
+</html>
