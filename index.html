@@ -1,16 +1,68 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Golden Chicken</title>
-  <style>
-    body { font-family: Arial; text-align:center; background:#f5f5f5; }
-    .card { background:#fff; margin:15px; padding:20px; width:220px; display:inline-block; border-radius:10px; }
-    .price { color:green; font-size:20px; }
-  </style>
+  <title>Golden Chicken Center </title>
+
+ <style>
+body {
+  font-family: Arial;
+  text-align: center;
+  background-color: #f5f5f5;
+}
+
+/* 🔥 FORCE BACKGROUND IMAGE VISIBILITY */
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+
+  background-image: url('https://sainath1945.github.io/golden-chicken/logo.png');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 300px;
+
+  opacity: 0.4; /* 🔥 increased visibility */
+  filter: grayscale(100%) contrast(150%); /* 🔥 makes logo visible */
+
+  z-index: 1;
+}
+
+/* optional overlay to balance colors */
+body::after {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(245,245,245,0.7);
+  z-index: -1;
+}
+
+.card {
+  background:#fff;
+  margin:15px;
+  padding:20px;
+  width:220px;
+  display:inline-block;
+  border-radius:10px;
+}
+
+.price {
+  color:green;
+  font-size:20px;
+}
+</style>
 </head>
+
 <body>
 
-<h2>Golden Chicken</h2>
+<h1>Golden Chicken Center </h1>
+<h4>Chota Anjainagar Gachibowli hyd 500032.</h4>
+
 <div id="productContainer"></div>
 
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
@@ -27,11 +79,13 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
+// 🔥 Daily price logic
 function getDailyPrice(basePrice) {
   const today = new Date().getDate();
   return basePrice + (today % 10) * 2;
 }
 
+// 🔥 Render products
 function renderProducts(data) {
   const container = document.getElementById("productContainer");
   container.innerHTML = "";
@@ -48,6 +102,7 @@ function renderProducts(data) {
   });
 }
 
+// 🔥 Live update from Firebase
 db.ref("products").on("value", snap => {
   if (snap.val()) renderProducts(snap.val());
 });
